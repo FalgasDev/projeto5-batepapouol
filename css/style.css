@@ -32,22 +32,33 @@ body {
 .messages {
 	width: 100%;
 	margin-top: 106px;
-	background-color: #dcdcdc;
+	margin-bottom: 96px;
 	border-radius: 2px;
 }
 
 .message {
 	padding: 15px 7px;
 	font-size: 14px;
+	margin: 4px 0px;
+	background-color: #dcdcdc;
+	word-break: break-all;
+	word-wrap: break-word;
 }
 
-.message span:nth-child(1) {
+.message span {
 	color: #aaaaaa;
 }
 
-.message span:nth-child(2) {
+strong {
 	font-weight: 700;
-	padding: 0px 5px;
+}
+
+.red {
+  background-color: #FFDEDE;
+}
+
+.white {
+  background-color: #ffffff;
 }
 
 .bottom-menu {
