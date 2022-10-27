@@ -65,9 +65,20 @@ function sendMessage() {
 		}
 	);
 	promise.then(messageChecker);
-	promise.catch((error) => {
-		console.log(error);
+	promise.catch(() => {
+		window.location.reload();
 	});
+
+	document.querySelector('input').value = '';
 }
 
 setInterval(messageChecker, 3000);
+setInterval(() => {
+	axios
+		.post('https://mock-api.driven.com.br/api/v6/uol/status', {
+			name: nome,
+		})
+		.catch(() => {
+			alert('Ocorreu um erro inesperado');
+		});
+}, 5000);
