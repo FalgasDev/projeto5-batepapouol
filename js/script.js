@@ -1,19 +1,30 @@
 let messages = [];
 let message = {};
 const chat = document.querySelector('.messages');
-let nome = prompt('Qual o seu nome?');
+let textName;
 
-function joinChat() {
+function registerName() {
+	const layoutRegister = document.querySelector('.register-name');
+	const button = document.querySelector('.register-name button');
+	const input = document.querySelector('.register-name input');
+	const gif = document.querySelector('.register-name img:last-child');
+	textName = document.querySelector('.register-name input').value;
 	axios
 		.post('https://mock-api.driven.com.br/api/v6/uol/participants', {
-			name: nome,
+			name: textName,
 		})
 		.then(messageChecker)
 		.catch(() => {
 			window.location.reload();
 		});
+	button.classList.add('hidden');
+	input.classList.add('hidden');
+	gif.classList.remove('hidden');
+	setTimeout(() => {
+		layoutRegister.classList.add('hidden');
+	}, 1000);
+	intervals();
 }
-joinChat();
 
 function messageChecker() {
 	axios
@@ -42,23 +53,25 @@ function messageRender() {
         </div>
       `;
 		} else {
-			chat.innerHTML += `
-        <div class="message red">
-          <p><span>(${messages[i].time})</span> <strong>${messages[i].from}</strong> reservadamente para <strong>${messages[i].to}</strong>: ${messages[i].text}</p>
-        </div>
-      `;
+			if (messages[i].to === textName) {
+				chat.innerHTML += `
+        	<div class="message red">
+          	<p><span>(${messages[i].time})</span> <strong>${messages[i].from}</strong> reservadamente para <strong>${messages[i].to}</strong>: ${messages[i].text}</p>
+        	</div>
+      	`;
+			}
 		}
 	}
 	document.querySelector('.message:last-child').scrollIntoView();
 }
 
 function sendMessage() {
-	const text = document.querySelector('input').value;
+	const text = document.querySelector('.bottom-menu input').value;
 
 	const promise = axios.post(
 		'https://mock-api.driven.com.br/api/v6/uol/messages',
 		{
-			from: nome,
+			from: textName,
 			to: 'Todos',
 			text: text,
 			type: 'message',
@@ -69,16 +82,18 @@ function sendMessage() {
 		window.location.reload();
 	});
 
-	document.querySelector('input').value = '';
+	document.querySelector('.bottom-menu input').value = '';
 }
 
-setInterval(messageChecker, 3000);
-setInterval(() => {
-	axios
-		.post('https://mock-api.driven.com.br/api/v6/uol/status', {
-			name: nome,
-		})
-		.catch(() => {
-			alert('Ocorreu um erro inesperado');
-		});
-}, 5000);
+function intervals() {
+	setInterval(messageChecker, 3000);
+	setInterval(() => {
+		axios
+			.post('https://mock-api.driven.com.br/api/v6/uol/status', {
+				name: textName,
+			})
+			.catch(() => {
+				alert('Ocorreu um erro inesperado');
+			});
+	}, 5000);
+}
