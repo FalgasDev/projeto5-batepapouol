@@ -1,6 +1,7 @@
 let messages = [];
 let message = {};
 const chat = document.querySelector('.messages');
+const text = document.querySelector('.bottom-menu input');
 let textName;
 
 function registerName() {
@@ -66,14 +67,12 @@ function messageRender() {
 }
 
 function sendMessage() {
-	const text = document.querySelector('.bottom-menu input').value;
-
 	const promise = axios.post(
 		'https://mock-api.driven.com.br/api/v6/uol/messages',
 		{
 			from: textName,
 			to: 'Todos',
-			text: text,
+			text: text.value,
 			type: 'message',
 		}
 	);
@@ -97,3 +96,14 @@ function intervals() {
 			});
 	}, 5000);
 }
+
+function sendWithEnter() {
+	text.addEventListener('keyup', function (e) {
+		let key = e.which || e.keyCode;
+		if (key == 13) {
+			sendMessage();
+		}
+	});
+}
+
+sendWithEnter();
