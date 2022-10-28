@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 	<head>
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -21,10 +21,43 @@
 			<button onclick="registerName()">Entrar</button>
 			<img class ="hidden" src="./images/Spin-1s-200px.gif" alt="">
 		</div>
+		<div onclick="exitSideMenu()" class="back-side-menu hidden"></div>
+		<div class="box">
+			<div class="container-people hidden">
+				<div class="side-menu">
+					<h1>Escolha um contato para enviar mensagem:</h1>
+					<div onclick="chosePeople(this)" class="contact option">
+						<div class="contact-name">
+							<ion-icon name="people"></ion-icon>
+							<p>Todos</p>
+						</div>
+						<ion-icon class="green selected" name="checkmark-sharp"></ion-icon>
+					</div>
+					<div class="peoples option">
+						
+					</div>
+					<h1>Escolha a visibilidade:</h1>
+					<div onclick="choseVisibility(this)" class="visibility option">
+						<div class="contact-name">
+							<ion-icon name="lock-open"></ion-icon>
+							<p>Público</p>
+						</div>
+						<ion-icon class="green selected" name="checkmark-sharp"></ion-icon>
+					</div>
+					<div onclick="choseVisibility(this)" class="visibility option">
+						<div class="contact-name">
+							<ion-icon name="lock-closed"></ion-icon>
+							<p>Reservadamente</p>
+						</div>
+						<ion-icon class="green hidden" name="checkmark-sharp"></ion-icon>
+					</div>
+				</div>
+			</div>
+		</div>
 		<div class="container">
 			<div class="top-menu">
 				<img src="./images/logo 1.png" alt="" />
-				<ion-icon name="people"></ion-icon>
+				<ion-icon onclick="openSideMenu()" name="people"></ion-icon>
 			</div>
 			<div class="messages"></div>
 			<div class="bottom-menu">

@@ -1,8 +1,17 @@
 let messages = [];
 let message = {};
+let peoples = [];
 const chat = document.querySelector('.messages');
+const peopleOption = document.querySelector('.peoples');
 const text = document.querySelector('.bottom-menu input');
+const backSideMenu = document.querySelector('.back-side-menu')
+const sideMenu = document.querySelector('.container-people');
+let checkPeople = document.querySelector('.contact .selected');
+let checkVisibility = document.querySelector('.visibility .selected');
 let textName;
+let visibility =
+	checkVisibility.parentNode.querySelector('.contact-name p').innerHTML;
+let people = checkPeople.parentNode.querySelector('.contact-name p').innerHTML;
 
 function registerName() {
 	const layoutRegister = document.querySelector('.register-name');
@@ -25,6 +34,7 @@ function registerName() {
 		layoutRegister.classList.add('hidden');
 	}, 1000);
 	intervals();
+	peopleChecker();
 }
 
 function messageChecker() {
@@ -54,7 +64,7 @@ function messageRender() {
         </div>
       `;
 		} else {
-			if (messages[i].to === textName) {
+			if (messages[i].to === textName || messages[i].from === textName) {
 				chat.innerHTML += `
         	<div class="message red">
           	<p><span>(${messages[i].time})</span> <strong>${messages[i].from}</strong> reservadamente para <strong>${messages[i].to}</strong>: ${messages[i].text}</p>
@@ -66,35 +76,64 @@ function messageRender() {
 	document.querySelector('.message:last-child').scrollIntoView();
 }
 
-function sendMessage() {
-	const promise = axios.post(
-		'https://mock-api.driven.com.br/api/v6/uol/messages',
-		{
-			from: textName,
-			to: 'Todos',
-			text: text.value,
-			type: 'message',
-		}
-	);
-	promise.then(messageChecker);
-	promise.catch(() => {
-		window.location.reload();
-	});
-
-	document.querySelector('.bottom-menu input').value = '';
+function peopleChecker() {
+	axios
+		.get('https://mock-api.driven.com.br/api/v6/uol/participants')
+		.then(peopleArrived);
 }
 
-function intervals() {
-	setInterval(messageChecker, 3000);
-	setInterval(() => {
-		axios
-			.post('https://mock-api.driven.com.br/api/v6/uol/status', {
-				name: textName,
-			})
-			.catch(() => {
-				alert('Ocorreu um erro inesperado');
-			});
-	}, 5000);
+function peopleArrived(res) {
+	peoples = res.data;
+	peopleOption.innerHTML = '';
+	peopleRender()
+}
+
+function peopleRender() {
+	for (let i = 0; i < peoples.length; i++) {
+		peopleOption.innerHTML += `
+			<div onclick="chosePeople(this)" class="contact option">
+				<div class="contact-name">
+					<ion-icon name="person-circle"></ion-icon>
+					<p>${peoples[i].name}</p>
+				</div>
+				<ion-icon class="green hidden" name="checkmark-sharp"></ion-icon>
+			</div>
+		`;
+	}
+}
+
+function sendMessage() {
+	if (visibility === 'Reservadamente') {
+		const promise2 = axios.post(
+			'https://mock-api.driven.com.br/api/v6/uol/messages',
+			{
+				from: textName,
+				to: people,
+				text: text.value,
+				type: 'private_message',
+			}
+		);
+		promise2.then(messageChecker);
+		promise2.catch(() => {
+			window.location.reload();
+		});
+	} else {
+		const promise = axios.post(
+			'https://mock-api.driven.com.br/api/v6/uol/messages',
+			{
+				from: textName,
+				to: people,
+				text: text.value,
+				type: 'message',
+			}
+		);
+		promise.then(messageChecker);
+		promise.catch(() => {
+			window.location.reload();
+		});
+	}
+
+	document.querySelector('.bottom-menu input').value = '';
 }
 
 function sendWithEnter() {
@@ -107,3 +146,52 @@ function sendWithEnter() {
 }
 
 sendWithEnter();
+
+function openSideMenu() {
+	sideMenu.classList.remove('hidden');
+	backSideMenu.classList.remove('hidden')
+}
+
+function exitSideMenu() {
+	sideMenu.classList.add('hidden');
+	backSideMenu.classList.add('hidden')
+}
+
+function chosePeople(res) {
+	const checkmark = res.querySelector('.green');
+	if (checkPeople) {
+		checkPeople.classList.remove('selected');
+		checkPeople.classList.add('hidden');
+	}
+	checkmark.classList.remove('hidden');
+	checkmark.classList.add('selected');
+	checkPeople = document.querySelector('.contact .selected');
+	people = checkPeople.parentNode.querySelector('.contact-name p').innerHTML;
+}
+
+function choseVisibility(res) {
+	const checkmark = res.querySelector('.green');
+	if (checkVisibility) {
+		checkVisibility.classList.remove('selected');
+		checkVisibility.classList.add('hidden');
+	}
+	checkmark.classList.remove('hidden');
+	checkmark.classList.add('selected');
+	checkVisibility = document.querySelector('.visibility .selected');
+	visibility =
+		checkVisibility.parentNode.querySelector('.contact-name p').innerHTML;
+}
+
+function intervals() {
+	setInterval(messageChecker, 3000);
+	setInterval(peopleChecker, 10000)
+	setInterval(() => {
+		axios
+			.post('https://mock-api.driven.com.br/api/v6/uol/status', {
+				name: textName,
+			})
+			.catch(() => {
+				alert('Ocorreu um erro inesperado');
+			});
+	}, 5000);
+}
