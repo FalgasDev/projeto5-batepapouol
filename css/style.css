@@ -197,6 +197,14 @@ strong {
 	outline: none;
 }
 
+.bottom-menu p {
+	font-size: 14px;
+	font-weight: 300;
+	color: #505050;
+	line-height: 25px;
+	margin-left: 17px;
+}
+
 .bottom-menu input::placeholder {
 	font-style: italic;
 	color: #000000;

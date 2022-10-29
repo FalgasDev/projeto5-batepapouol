@@ -4,8 +4,9 @@ let peoples = [];
 const chat = document.querySelector('.messages');
 const peopleOption = document.querySelector('.peoples');
 const text = document.querySelector('.bottom-menu input');
-const backSideMenu = document.querySelector('.back-side-menu')
+const backSideMenu = document.querySelector('.back-side-menu');
 const sideMenu = document.querySelector('.container-people');
+const bottomMenu = document.querySelector('.bottom-menu p');
 let checkPeople = document.querySelector('.contact .selected');
 let checkVisibility = document.querySelector('.visibility .selected');
 let textName;
@@ -35,6 +36,9 @@ function registerName() {
 	}, 1000);
 	intervals();
 	peopleChecker();
+	bottomMenu.innerHTML = `
+	Enviando para ${people} (${visibility})
+	`
 }
 
 function messageChecker() {
@@ -85,7 +89,7 @@ function peopleChecker() {
 function peopleArrived(res) {
 	peoples = res.data;
 	peopleOption.innerHTML = '';
-	peopleRender()
+	peopleRender();
 }
 
 function peopleRender() {
@@ -137,10 +141,9 @@ function sendMessage() {
 }
 
 function sendWithEnter() {
-	text.addEventListener('keyup', function (e) {
-		let key = e.which || e.keyCode;
-		if (key == 13) {
-			sendMessage();
+	text.addEventListener("keydown", e => {
+		if (e.key === "Enter") {
+			sendMessage()
 		}
 	});
 }
@@ -149,12 +152,12 @@ sendWithEnter();
 
 function openSideMenu() {
 	sideMenu.classList.remove('hidden');
-	backSideMenu.classList.remove('hidden')
+	backSideMenu.classList.remove('hidden');
 }
 
 function exitSideMenu() {
 	sideMenu.classList.add('hidden');
-	backSideMenu.classList.add('hidden')
+	backSideMenu.classList.add('hidden');
 }
 
 function chosePeople(res) {
@@ -167,6 +170,9 @@ function chosePeople(res) {
 	checkmark.classList.add('selected');
 	checkPeople = document.querySelector('.contact .selected');
 	people = checkPeople.parentNode.querySelector('.contact-name p').innerHTML;
+	bottomMenu.innerHTML = `
+	Enviando para ${people} (${visibility})
+	`;
 }
 
 function choseVisibility(res) {
@@ -180,11 +186,14 @@ function choseVisibility(res) {
 	checkVisibility = document.querySelector('.visibility .selected');
 	visibility =
 		checkVisibility.parentNode.querySelector('.contact-name p').innerHTML;
+	bottomMenu.innerHTML = `
+	Enviando para ${people} (${visibility})
+	`;
 }
 
 function intervals() {
 	setInterval(messageChecker, 3000);
-	setInterval(peopleChecker, 10000)
+	setInterval(peopleChecker, 10000);
 	setInterval(() => {
 		axios
 			.post('https://mock-api.driven.com.br/api/v6/uol/status', {
