@@ -26,6 +26,7 @@ function registerName() {
 		})
 		.then(messageChecker)
 		.catch(() => {
+			alert('O nome já está sendo utilizado, tente outro por favor!')
 			window.location.reload();
 		});
 	button.classList.add('hidden');
