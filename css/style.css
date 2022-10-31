@@ -161,6 +161,7 @@ body {
 
 .message span {
 	color: #aaaaaa;
+	padding-right: 5px;
 }
 
 strong {

@@ -26,7 +26,7 @@ function registerName() {
 		})
 		.then(messageChecker)
 		.catch(() => {
-			alert('O nome já está sendo utilizado, tente outro por favor!')
+			alert('O nome já está sendo utilizado, tente outro por favor!');
 			window.location.reload();
 		});
 	button.classList.add('hidden');
@@ -39,7 +39,7 @@ function registerName() {
 	peopleChecker();
 	bottomMenu.innerHTML = `
 	Enviando para ${people} (${visibility})
-	`
+	`;
 }
 
 function messageChecker() {
@@ -142,9 +142,9 @@ function sendMessage() {
 }
 
 function sendWithEnter() {
-	text.addEventListener("keydown", e => {
-		if (e.key === "Enter") {
-			sendMessage()
+	text.addEventListener('keydown', (e) => {
+		if (e.key === 'Enter') {
+			sendMessage();
 		}
 	});
 }
